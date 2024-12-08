@@ -1,0 +1,6 @@
+@ChainTransmissionAPI_HostAddress = http://localhost:5182
+
+GET {{ChainTransmissionAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
