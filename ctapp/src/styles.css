@@ -1,0 +1,52 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: 100vh;
+    margin: auto;
+    gap: 16px;
+}
+
+.ct-grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    margin-top: 8px;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    gap: 24px;
+}
+
+.ct-block {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: whitesmoke;
+    overflow-y: scroll;
+}
+
+.ct-item {
+    width: 100%;
+    height: 144px;
+    margin: 8px 16px 8px 16px;
+    padding: 0px 16px 0px 16px;
+    box-shadow: 1px 1px 4px;
+    border-radius: 16px;
+    background-color: white;
+}
+
+.ct-monitor {
+    height: 120px;
+    bottom: 0;
+    background-color: rgb(230, 255, 173);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
