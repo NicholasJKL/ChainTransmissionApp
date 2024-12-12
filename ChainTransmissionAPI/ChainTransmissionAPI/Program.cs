@@ -1,12 +1,28 @@
 using Microsoft.EntityFrameworkCore;
-using ChainTransmissionAPI.Models;
+using ChainTransmissionAPI.Models.Contexts;
+using ChainTransmissionAPI.Managers;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+string? connectionChainTransmission = builder.Configuration.GetConnectionString("ChainTransmissionConnection");
 
-builder.Services.AddDbContext<ChainTransmissionContext>(options => options.UseNpgsql(connection));
+string? connectionStaticVariables = builder.Configuration.GetConnectionString("StaticVariablesConnection");
+
+
+builder.Services.AddDbContext<ChainTransmissionContext>(options => options
+	.UseNpgsql(connectionChainTransmission)
+	.UseLazyLoadingProxies()
+);
+
+builder.Services.AddDbContext<StaticVariablesContext>(options => options
+	.UseNpgsql(connectionStaticVariables)
+);
+
+builder.Services.AddScoped<IChainTransmissionManager, ChainTransmissionManager>();
+
+builder.Services.AddCors();
+
 
 // Add services to the container.
 
@@ -20,8 +36,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -29,5 +45,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(builder => builder
+	.WithOrigins("http://localhost:3000", "https://localhost:3000")
+	.AllowAnyHeader()
+	.AllowAnyMethod()
+);
 
 app.Run();

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 
-namespace ChainTransmissionAPI.Models
+namespace ChainTransmissionAPI.Models.Contexts
 {
 	public class ChainTransmissionContext : DbContext
 	{

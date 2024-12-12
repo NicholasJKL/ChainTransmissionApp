@@ -3,19 +3,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using ChainTransmissionAPI.Models.Contexts;
+using ChainTransmissionAPI.Managers;
 
 
 namespace ChainTransmissionAPI.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
-	public class WeatherForecastController : ControllerBase
+	public class ChainTransmissionController : ControllerBase
 	{
 		ChainTransmissionContext _db;
+		IChainTransmissionManager _manager;
 
-		public WeatherForecastController(ChainTransmissionContext context)
+		public ChainTransmissionController(ChainTransmissionContext context, IChainTransmissionManager manager)
 		{
 			_db = context;
+			_manager = manager;
 		}
 
 		[HttpPost("/CreateUnit")]
@@ -96,6 +100,21 @@ namespace ChainTransmissionAPI.Controllers
 			var parts = await _db.Parts.Where(part => part.AssemblyUnitKSE == assemblyUnitKey).ToListAsync();
 
 			return Ok(parts);
+		}
+
+		[HttpGet("/GetStatuses")]
+		public async Task<IActionResult> GetStatuses(int unitKey)
+		{
+			string possibleError = await _manager.CalculateUnitVerificationAsync(unitKey);
+
+			if (possibleError.Length > 0)
+			{
+				return BadRequest(possibleError);
+			}
+
+			var results = await _db.AssemblyUnits.Where(assemblyUnit => assemblyUnit.UnitKU == unitKey).ToListAsync();
+
+			return Ok(results);
 		}
 	}
 }

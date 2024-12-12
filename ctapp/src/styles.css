@@ -9,7 +9,32 @@ main {
     width: 90%;
     height: 100vh;
     margin: auto;
-    gap: 16px;
+    gap: 24px;
+}
+
+p {
+    font-size: 24px;
+}
+
+
+button {
+    padding: 8px 16px 8px 16px;
+    border-radius: 16px;
+    font-size: 18px;
+    background-color: white;
+
+}
+
+label {
+    font-size: 16px;
+}
+
+input,
+select {
+    border-radius: 8px;
+    padding: 4px;
+    font-size: 16px;
+    border: 1px solid black
 }
 
 .ct-grid {
@@ -22,31 +47,80 @@ main {
     gap: 24px;
 }
 
+.ct-grid-block {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 4px;
+    align-items: center;
+}
+
 .ct-block {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
-    height: 100%;
-    justify-content: center;
+    height: 760px;
     border-radius: 16px;
     background-color: whitesmoke;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .ct-item {
-    width: 100%;
-    height: 144px;
+    height: 164px;
     margin: 8px 16px 8px 16px;
     padding: 0px 16px 0px 16px;
-    box-shadow: 1px 1px 4px;
+    border: 4px solid black;
     border-radius: 16px;
     background-color: white;
+    transition: border-color 0.2s;
+}
+
+.ct-item:hover {
+    border-color: cyan;
+    transition: border-color 0.2s;
+}
+
+.selected {
+    border-color: yellowgreen;
+    transition: border-color 0.2s;
 }
 
 .ct-monitor {
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 0 24px 0 24px;
+    align-items: center;
     height: 120px;
     bottom: 0;
-    background-color: rgb(230, 255, 173);
+    background-color: whitesmoke;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
+    gap: 24px;
+}
+
+.ct-creation {
+    display: flex;
+    flex-direction: column;
+    margin: 8px 16px 8px 16px;
+    padding: 4px 16px 4px 16px;
+    height: fit-content;
+    border: 4px black;
+    border-style: dashed;
+    border-radius: 16px;
+    background-color: white;
+    gap: 8px;
+    order: 1000;
+}
+
+.ct-creation p {
+    font-size: 16px;
+}
+
+.valid {
+    background-color: greenyellow;
+}
+
+.invalid {
+    background-color: lightcoral;
 }
