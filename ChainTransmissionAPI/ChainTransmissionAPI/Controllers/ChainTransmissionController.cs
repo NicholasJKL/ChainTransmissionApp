@@ -30,7 +30,7 @@ namespace ChainTransmissionAPI.Controllers
 				await _db.Units.AddAsync(unit);
 				await _db.SaveChangesAsync();
 
-				return Created();
+				return Ok(new { id = unit.KU });
 			}
 			catch (Exception ex)
 			{
@@ -50,7 +50,7 @@ namespace ChainTransmissionAPI.Controllers
 				await _db.AssemblyUnits.AddAsync(assemblyUnit);
 				await _db.SaveChangesAsync();
 
-				return Created();
+				return Ok(new { id = assemblyUnit.KSE });
 			}
 			catch (Exception ex)
 			{
@@ -70,7 +70,7 @@ namespace ChainTransmissionAPI.Controllers
 				await _db.Parts.AddAsync(part);
 				await _db.SaveChangesAsync();
 
-				return Created();
+				return Ok(new { id = part.KD });
 			}
 			catch (Exception ex)
 			{
@@ -109,7 +109,7 @@ namespace ChainTransmissionAPI.Controllers
 
 			if (possibleError.Length > 0)
 			{
-				return BadRequest(possibleError);
+				return BadRequest(JsonSerializer.Serialize(possibleError));
 			}
 
 			var results = await _db.AssemblyUnits.Where(assemblyUnit => assemblyUnit.UnitKU == unitKey).ToListAsync();

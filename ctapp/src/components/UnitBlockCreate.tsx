@@ -35,8 +35,11 @@ const UnitBlockCreate: FC<UnitBlockCreateProps> = ({addUnit }) => {
         e.preventDefault();
         if (unit.nu && unit.tu && unit.tn && unit.vu && unit.n > 0) {
             createUnit(unit)
-                .then(() => {
-                    addUnit(unit);
+                .then((queryObject) => {
+                    addUnit({
+                        ...unit,
+                        ku: queryObject.id
+                    });
                 })
                 .catch(error => console.error(error));
         }

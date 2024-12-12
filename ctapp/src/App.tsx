@@ -18,6 +18,7 @@ const App: FC = () => {
 	const [units, setUnits] = useState<UnitDTO[]>([]);
 	const [assemblyUnits, setAssemblyUnits] = useState<AssemblyUnitDTO[]>([]);
 	const [parts, setParts] = useState<PartDTO[]>([]);
+	const [error, setError] = useState<string>('');
 
 	const [selectedUnitIndex, setSelectedUnitIndex] = useState<number | null>(null);
 	const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
@@ -35,6 +36,7 @@ const App: FC = () => {
 	);
 
 	useEffect(() => {
+		console.log(selectedUnitId);
 		setParts([]);
 		setSelectedAssemblyUnitId(null);
 		if (selectedUnitId)
@@ -51,24 +53,30 @@ const App: FC = () => {
 	}, [selectedUnitId]);
 
 	useEffect(() => {
-		if (selectedAssemblyUnitId)
+		console.log(selectedAssemblyUnitId);
+		if (selectedAssemblyUnitId) {
 			getPartsByAssemblyUnit(selectedAssemblyUnitId)
 				.then(queryObject => {
 					if (queryObject)
 						setParts(queryObject);
+
 				})
+		}
+		else {
+			setParts([]);
+		}
 	}, [selectedAssemblyUnitId]);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setError('');
 		if (selectedUnitId) {
 			getStatuses(selectedUnitId)
 				.then(queryObject => {
-					console.log(queryObject)
 					if (queryObject)
 						setAssemblyUnits(queryObject)
 				})
-				.catch(error => console.error(error));
+				.catch(error => setError(error.message));
 		}
 	}
 
@@ -98,7 +106,7 @@ const App: FC = () => {
 									selected = true;
 								}
 								return <UnitBlock
-									key={unit.ku}
+									key={index}
 									unit={unit}
 									onClick={setSelectedUnitId}
 									onSelection={setSelectedUnitIndex}
@@ -142,13 +150,15 @@ const App: FC = () => {
 				<div className='ct-grid-block'>
 					<h1>Детали</h1>
 					<div className='ct-block'>
-					{selectedAssemblyUnitId === null ? <></>
+						{selectedAssemblyUnitId === null ? <></>
 							:
-						<PartBlockCreate addPart={addPart}></PartBlockCreate>
-					}
+							<PartBlockCreate
+								addPart={addPart}
+								selectedAssemblyUnitId={selectedAssemblyUnitId}></PartBlockCreate>
+						}
 						{
-							parts.map(part => {
-								return <PartBlock key={part.kd} part={part}></PartBlock>
+							parts.map((part, index) => {
+								return <PartBlock key={index} part={part} index={index + 1}></PartBlock>
 							})
 						}
 					</div>
@@ -157,6 +167,7 @@ const App: FC = () => {
 			<form className='ct-monitor' onSubmit={handleSubmit}>
 				<button type='submit'>Расчёт</button>
 				<p>Выбранный узел: {selectedUnitIndex ?? 'Не выбран'}</p>
+				{error ? <p>{error}</p> : <></>}
 			</form>
 		</main>
 	);

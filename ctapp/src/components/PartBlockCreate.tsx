@@ -4,10 +4,11 @@ import { createPart } from '../requests';
 
 
 interface PartCreateProps {
+    selectedAssemblyUnitId: number,
     addPart: (parts: PartDTO) => void
 }
 
-const PartCreate: FC<PartCreateProps> = ({ addPart }) => {
+const PartCreate: FC<PartCreateProps> = ({ addPart, selectedAssemblyUnitId }) => {
 
     const [partType, setPartType] = useState<string>('Колесо');
 
@@ -15,7 +16,7 @@ const PartCreate: FC<PartCreateProps> = ({ addPart }) => {
         kd: 0,
         nd: 'Колесо',
         td: '',
-        assemblyUnitKSE: 0
+        assemblyUnitKSE: selectedAssemblyUnitId
     };
 
     const [part, setPart] = useState<PartDTO>(initpart);
@@ -31,7 +32,12 @@ const PartCreate: FC<PartCreateProps> = ({ addPart }) => {
     }
 
     const handlePartTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        setPartType(e.currentTarget.value);
+        const value = e.currentTarget.value;
+        setPartType(value);
+        setPart({
+            ...initpart,
+            nd: value
+        });
     }
 
 
@@ -40,39 +46,42 @@ const PartCreate: FC<PartCreateProps> = ({ addPart }) => {
         let valid = false;
         console.log(part);
         if (part.nd === 'Колесо') {
-            if (part.td && part.naD && typeof(part.z) === 'number') {
+            if (part.td && part.naD && part.z) {
                 valid = true;
             }
-            else {
-                if (part.td) {
-                    switch (part.nd[0]) {
-                        case ('2'):
-                            {
-                                part.vd = 'Двухрядная';
-                                break;
-                            }
-                        case ('3'):
-                            {
-                                part.vd = 'Трёхрядная';
-                                break;
-                            }
-                        case ('4'):
-                            {
-                                part.vd = 'Четырёхрядная';
-                                break;
-                            }
-                        default: {
-                            part.vd = 'Однорядная'
+        }
+        else {
+            if (part.td && part.nd.includes('ПР')) {
+                switch (part.nd[0]) {
+                    case ('2'):
+                        {
+                            part.vd = 'Двухрядная';
+                            break;
                         }
+                    case ('3'):
+                        {
+                            part.vd = 'Трёхрядная';
+                            break;
+                        }
+                    case ('4'):
+                        {
+                            part.vd = 'Четырёхрядная';
+                            break;
+                        }
+                    default: {
+                        part.vd = 'Однорядная'
                     }
-                    valid = true;
                 }
+                valid = true;
             }
         }
         if (valid) {
             createPart(part)
-                .then(() => {
-                    addPart(part);
+                .then((queryObject) => {
+                    addPart({
+                        ...part,
+                        kd: queryObject.id
+                    });
                 })
                 .catch(error => console.error(error));
         }
@@ -122,27 +131,15 @@ const PartCreate: FC<PartCreateProps> = ({ addPart }) => {
                             <select name="nd" id="" onChange={handleChange}>
                                 <option value=""></option>
                                 <option value="ПР-12,7-1820-2">ПР-12,7-1820-2</option>
-                                <option value="2ПР-12,7-3180">2ПР-12,7-3180</option>
-                                <option value="ПР-15,875-2270-2">ПР-15,875-2270-2</option>
-                                <option value="2ПР-15,875-4540">2ПР-15,875-4540</option>
-                                <option value="ПР-19,05-3180">ПР-19,05-3180</option>
-                                <option value="2ПР-19,05-7200">2ПР-19,05-7200</option>
-                                <option value="ПР-25,4-5670">ПР-25,4-5670</option>
-                                <option value="2ПР-25,4-11340">2ПР-25,4-11340</option>
-                                <option value="ПР-31,75-8850">ПР-31,75-8850</option>
-                                <option value="2ПР-31,75-17700">2ПР-31,75-17700</option>
-                                <option value="ПР-38,1-12700">ПР-38,1-12700</option>
-                                <option value="2ПР-38,1-25400">2ПР-38,1-25400</option>
-                                <option value="ПР-44,45-17240">ПР-44,45-17240</option>
-                                <option value="2ПР-44,45-34480">2ПР-44,45-34480</option>
                                 <option value="ПР-50,8-22680">ПР-50,8-22680</option>
+                                <option value="2ПР-12,7-3180">2ПР-12,7-3180</option>
                                 <option value="2ПР-50,8-45360">2ПР-50,8-45360</option>
                             </select>
                             <div>
                                 <p>Тип цепи: </p>
                                 <select name="td" id="" onChange={handleChange}>
                                     <option value=""></option>
-                                    <option value="Ведущее">Приводная роликовая</option>
+                                    <option value="Приводная роликовая">Приводная роликовая</option>
                                 </select>
                             </div>
                         </div>

@@ -33,11 +33,13 @@ const AssemblyUnitBlockCreate: FC<AssemblyUnitBlockCreateProps> = ({ selectedUni
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(selectedUnitId);
         if (assemblyUnit.nse && assemblyUnit.tse && assemblyUnit.sm && assemblyUnit.t) {
             createAssemblyUnit(assemblyUnit)
-                .then(() => {
-                    addAssemblyUnit(assemblyUnit);
+                .then((queryObject) => {
+                    addAssemblyUnit({
+                        ...assemblyUnit,
+                        kse: queryObject.id
+                    });
                 })
                 .catch(error => console.error(error));
         }

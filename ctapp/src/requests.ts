@@ -49,14 +49,14 @@ const getPartsByAssemblyUnit = async (assemblyUnitKey: number): Promise<PartDTO[
 const getStatuses = async (unitKey: number): Promise<AssemblyUnitDTO[] | undefined> => {
     try {
         const response = await fetch(`http://localhost:5182/GetStatuses?unitKey=${unitKey}`);
+        const json = await response.json();
         if (response.ok) {
-            const json = await response.json();
             return json;
         }
-        throw new Error('Ошибка при запросе: ' + response.status);
+        throw new Error('Ошибка при запросе: ' + json);
     }
     catch (error) {
-        console.error(error);
+        throw(error);
     }
 }
 
@@ -67,7 +67,7 @@ const createUnit = async (unit: UnitDTO): Promise<any> => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(unit)
         })
-        return response;
+        return await response.json();
     }
     catch (error) {
         console.error(error);
@@ -81,8 +81,7 @@ const createAssemblyUnit = async (assemblyUnit: AssemblyUnitDTO): Promise<any> =
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(assemblyUnit)
         })
-        console.log(response);
-        return response;
+        return await response.json();
     }
     catch (error) {
         console.error(error);
@@ -96,7 +95,7 @@ const createPart = async (part: PartDTO): Promise<any> => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(part)
         })
-        return response;
+        return await response.json();
     }
     catch (error) {
         console.error(error);
