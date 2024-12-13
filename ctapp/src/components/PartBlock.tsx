@@ -13,8 +13,8 @@ const PartBlock: FC<PartBlockProps> = ({ part, index }) => {
             <p><b>Деталь: {index}</b></p>
             <p>Наименование детали: {part.nd}</p>
             <p>Тип детали: {part.td}</p>
-            <p>Вид детали: {part.vd}</p>
-            <p>Назначение детали: {part.naD}</p>
+            {part.vd ? <p>Вид детали: {part.vd} </p>: <></>}
+            {part.naD ? <p>Назначение детали: {part.naD}</p> : <></>}
         </div>
     );
 }
